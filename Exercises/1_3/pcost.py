@@ -5,7 +5,7 @@
 
 
 def calculate_total_cost():
-    with open('/Users/shimpali/PycharmProjects/python-mastery/Data/portfolio.dat', 'r') as file:
+    with open('Data/portfolio.dat', 'r') as file:
         cost = 0.0
         for line in file:
             columns = line.split()
