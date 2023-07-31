@@ -45,6 +45,4 @@ def read_csv_as_instances(filename, cls, *, headers=None):
         return csv_as_instances(file, cls, headers=headers)
 ```
 
-
-
 [Back](ex5_5.md)

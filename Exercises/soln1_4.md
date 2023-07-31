@@ -42,5 +42,4 @@ def portfolio_cost(filename):
 print(portfolio_cost('Data/portfolio3.dat'))
 ```
 
-
 [Back](ex1_4.md)

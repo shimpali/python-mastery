@@ -63,6 +63,4 @@ if __name__ == '__main__':
 The `time.sleep()` function is being used here to avoid busy-waiting
 on the CPU (e.g., sitting in an infinite loop with 100% CPU use while waiting for new lines to arrive)
 
-
-
 [Back](ex8_1.md)

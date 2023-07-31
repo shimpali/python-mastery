@@ -73,6 +73,4 @@ class MutInt:
     __index__ = __int__
 ```
 
-
-
 [Back](ex2_4.md)

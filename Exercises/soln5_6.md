@@ -124,6 +124,4 @@ if __name__ == '__main__':
     unittest.main()
 ```
 
-
-
 [Back](ex5_6.md)

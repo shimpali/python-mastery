@@ -26,5 +26,4 @@ if __name__ == '__main__':
     print(portfolio_cost('Data/portfolio.dat'))
 ```
 
-
 [Back](ex1_6.md)

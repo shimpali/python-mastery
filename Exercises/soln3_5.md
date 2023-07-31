@@ -56,6 +56,4 @@ def create_formatter(name):
     return formatter_cls()
 ```
 
-
-
 [Back](ex3_5.md)

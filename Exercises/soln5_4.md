@@ -35,5 +35,4 @@ if __name__ == '__main__':
             self.price = price
 ```
 
-
 [Back](ex5_4.md)

@@ -66,6 +66,4 @@ if __name__ == '__main__':
            ticker('text', ['name','price','change'])))))
 ```
 
-
-
 [Back](ex8_3.md)

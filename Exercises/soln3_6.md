@@ -29,6 +29,4 @@ class Stock:
 
 Code is given in the exercise.
 
-
-
 [Back](ex3_6.md)

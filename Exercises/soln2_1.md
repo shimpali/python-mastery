@@ -83,6 +83,4 @@ if __name__ == '__main__':
     print('Memory Use: Current %d, Peak %d' % tracemalloc.get_traced_memory())
 ```
 
-
-
 [Back](ex2_1.md)

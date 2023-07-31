@@ -26,7 +26,4 @@ class Structure:
                            ', '.join(repr(getattr(self, name)) for name in self._fields))
 ```
 
-
-
-
 [Back](ex6_2.md)

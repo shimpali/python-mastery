@@ -17,6 +17,7 @@ class Structure:
 ## (b) Making a Useful Representation
 
 [source, python]
+
 ```
 class Structure:
     ...    
@@ -28,6 +29,7 @@ class Structure:
 ## (c) Restricting Attribute Names
 
 [source, python]
+
 ```
 class Structure:
     ...    
@@ -37,7 +39,5 @@ class Structure:
         else:
             raise AttributeError('No attribute %s' % name)
 ```
-
-
 
 [Back](ex6_1.md)

@@ -83,6 +83,4 @@ def create_formatter(name, column_formats=None, upper_headers=False):
     return formatter_cls()
 ```
 
-
-
 [Back](ex3_8.md)

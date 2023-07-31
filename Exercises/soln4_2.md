@@ -88,6 +88,4 @@ if __name__ == '__main__':
             self.shares -= nshares
 ```
 
-
-
 [Back](ex4_2.md)

@@ -24,7 +24,6 @@ class Stock:
         self.shares -= nshares
 ```
 
-
 ## (b) Computed Attributes
 
 ```python
@@ -193,7 +192,5 @@ class Stock:
     def sell(self, nshares):
         self.shares -= nshares
 ```
-
-
 
 [Back](ex3_4.md)

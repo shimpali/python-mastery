@@ -47,6 +47,4 @@ class Stock(Structure):
 Stock.create_init()
 ```
 
-
-
 [Back](ex6_4.md)

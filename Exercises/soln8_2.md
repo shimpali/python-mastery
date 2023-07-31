@@ -29,6 +29,4 @@ if __name__ == '__main__':
     print_table(negative, ['name','price','change'], formatter)
 ```
 
-
-
 [Back](ex8_2.md)

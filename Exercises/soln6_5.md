@@ -34,6 +34,4 @@ if __name__ == '__main__':
     add = ValidatedFunction(add)
 ```
 
-
-
 [Back](ex6_5.md)

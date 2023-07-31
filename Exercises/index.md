@@ -4,14 +4,14 @@ Copyright (C) 2007-2023
 David M. Beazley  
 https://www.dabeaz.com
 
-This page contains links to all of the course exercises.  For the best experience,
+This page contains links to all of the course exercises. For the best experience,
 the exercises should be worked in order as later exercises often build upon earlier
-exercises.  The [`Solutions/`](../Solutions) directory contains fully worked
-out solutions to every exercise.  You can use this if you get stuck or you
+exercises. The [`Solutions/`](../Solutions) directory contains fully worked
+out solutions to every exercise. You can use this if you get stuck or you
 need to reset your code to a working state.
 
 Before beginning, you should fork/clone the GitHub repo so that you have a
-local copy on your machine.  Exercises assume that all of your work will
+local copy on your machine. Exercises assume that all of your work will
 take place in the top-level `python-mastery` directory.
 
 Associated course presentation slides can be found at [PythonMastery.pdf](../PythonMastery.pdf).

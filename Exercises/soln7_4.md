@@ -2,6 +2,4 @@
 
 All of the solution code is given in the exercise description.
 
-
-
 [Back](ex7_4.md)

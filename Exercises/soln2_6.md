@@ -20,6 +20,4 @@ def read_csv_as_dicts(filename, types):
     return records
 ```
 
-
-
 [Back](ex2_6.md)

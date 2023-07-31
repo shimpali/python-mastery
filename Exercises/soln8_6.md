@@ -192,6 +192,4 @@ if __name__ == '__main__':
     run()
 ```
 
-
-
 [Back](ex8_6.md)

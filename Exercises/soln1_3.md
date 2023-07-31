@@ -15,5 +15,4 @@ with open('Data/portfolio.dat', 'r') as f:
 print(total_cost)
 ```
 
-
 [Back](ex1_3.md)

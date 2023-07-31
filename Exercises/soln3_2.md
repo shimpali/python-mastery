@@ -13,6 +13,4 @@ def print_table(records, fields):
         print(' '.join('%10s' % getattr(record, fieldname) for fieldname in fields))
 ```
 
-
-
 [Back](ex3_2.md)

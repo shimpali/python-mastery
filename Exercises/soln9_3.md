@@ -40,7 +40,7 @@ __all__ = [ *structure.__all__,
 
 ## (c) Module Splitting
 
-There are a few parts to this.   First, the individual files in `tableformat/formats` are going to
+There are a few parts to this. First, the individual files in `tableformat/formats` are going to
 look like this:
 
 ```python
@@ -132,6 +132,5 @@ from .formatter import print_table, create_formatter
 
 __all__ = [ 'print_table', 'create_formatter' ]
 ```
-
 
 [Back](ex9_3.md)

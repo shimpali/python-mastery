@@ -43,6 +43,4 @@ if __name__ == '__main__':
     print_portfolio(portfolio)
 ```
 
-
-
 [Back](ex3_1.md)

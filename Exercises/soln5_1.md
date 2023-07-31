@@ -1,6 +1,6 @@
 # Exercise 5.1 - Solution
 
-This is a partial solution that does not include type-hints. 
+This is a partial solution that does not include type-hints.
 
 ```python
 # reader.py
@@ -48,8 +48,5 @@ def read_csv_as_instances(filename, cls, *, headers=None):
     with open(filename) as file:
         return csv_as_instances(file, cls, headers=headers)
 ```
-
-
-
 
 [Back](ex5_1.md)

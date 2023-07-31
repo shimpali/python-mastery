@@ -53,6 +53,4 @@ class Stock(Structure):
 Stock.set_fields()
 ```
 
-
-
 [Back](ex6_3.md)

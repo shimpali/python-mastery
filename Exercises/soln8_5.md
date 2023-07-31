@@ -61,6 +61,4 @@ if __name__ == '__main__':
     run()
 ```
 
-
-
 [Back](ex8_5.md)

@@ -55,6 +55,4 @@ def convert_csv(lines, converter, *, headers=None):
     return map(lambda row: converter(headers, row), rows)
 ```
 
-
-
 [Back](ex5_3.md)

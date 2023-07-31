@@ -42,8 +42,8 @@ logged = logformat('Calling {func.__name__}')
 
 ## (c) Decorators and methods
 
-You can get the code to work if you interchange the order of the 
-decorators.  For example:
+You can get the code to work if you interchange the order of the
+decorators. For example:
 
 ```python
 from logcall import logged
@@ -69,7 +69,7 @@ class Spam:
         pass
 ```
 
-Ponder why it doesn't work in the original order.  Is there any way to make
+Ponder why it doesn't work in the original order. Is there any way to make
 the `@logged` decorator work regardless of the order in which its applied?
 
 ## (d) Validation (Redux)
@@ -149,8 +149,5 @@ def enforce(**annotations):
         return wrapper
     return decorate
 ```
-
-
-
 
 [Back](ex7_2.md)

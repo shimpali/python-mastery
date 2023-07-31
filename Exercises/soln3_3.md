@@ -79,6 +79,4 @@ def read_csv_as_instances(filename, cls):
     return records
 ```
 
-
-
 [Back](ex3_3.md)

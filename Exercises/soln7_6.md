@@ -88,6 +88,4 @@ def typed_structure(clsname, **validators):
     return cls
 ```
 
-
-
 [Back](ex7_6.md)

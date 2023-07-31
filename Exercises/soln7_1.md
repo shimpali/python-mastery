@@ -42,6 +42,4 @@ def validated(func):
     return wrapper
 ```
 
-
-
 [Back](ex7_1.md)
