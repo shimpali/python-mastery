@@ -8,13 +8,14 @@
 # 181
 #
 # 2. How many people rode the number 22 bus on February 2, 2011? What about any route on any date of your choosing?
-# >>> from collections import Counter
-# >>> people_count = Counter()
-#
-# # >>> people_count['c'] = list(filter(lambda x: x['date'] == '02/02/2011' and x['route'] == '22', rows))
-# >>> people_count['count'] = [bus for bus in rows if bus['date'] == '02/02/2011' and bus['route'] == '22'][0]
-# >>> print(people_count['count'])
-# {'route': '22', 'date': '02/02/2011', 'daytype': 'W', 'rides': 5055}
+>>> rows_on_22 = list(filter(lambda x: x['route'] == '22', rows))
+>>> print(rows_on_22)
+[{'route': '22', 'date': '01/01/2001', 'daytype': 'U', 'rides': 7877}, {'route': '22', 'date': '01/02/2001', 'daytype': 'W', 'rides': 19558}]
+>>> print(max(rows_on_22, key=lambda row: row['rides']))
+{'route': '22', 'date': '01/02/2001', 'daytype': 'W', 'rides': 19558}
+
+
+{'route': '22', 'date': '02/02/2011', 'daytype': 'W', 'rides': 5055}
 # >>> date_wise_routes = [bus['rides'] for bus in rows if bus['date'] == '02/02/2011' and bus['route'] == '22']
 # >>> print(*date_wise_routes)
 # 5055
@@ -45,3 +46,4 @@ def total_number_of_rides(rows):
     #         ride_count['rides'] = Counter(rows)
     #         print(ride_count)
     # print(total_rides)
+
