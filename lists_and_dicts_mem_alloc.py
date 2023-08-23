@@ -1,13 +1,8 @@
-\[ [Index](index.md) | [Exercise 2.4](ex2_4.md) | [Exercise 2.6](ex2_6.md) \]
-
-# Exercise 2.5
-
+"""
 *Objectives:*
 
 - Look at memory allocation behavior of lists and dicts
 - Make a custom container
-
-*Files Created:* None
 
 ## (a) List growth
 
@@ -22,28 +17,25 @@ Experiment with this feature of lists by using
 the `sys.getsizeof()` function on a list and appending a few
 more items.
 
-```python
 >>> import sys
 >>> items = []
 >>> sys.getsizeof(items)
-64
+56
 >>> items.append(1)
 >>> sys.getsizeof(items)
-96
+88
 >>> items.append(2)
 >>> sys.getsizeof(items)    # Notice how the size does not increase
-96
+88
 >>> items.append(3)
 >>> sys.getsizeof(items)    # It still doesn't increase here
-96
+88
 >>> items.append(4)
 >>> sys.getsizeof(items)    # Not yet.
-96
+88
 >>> items.append(5)
 >>> sys.getsizeof(items)    # Notice the size has jumped
-128
->>>
-```
+120
 
 A list stores its items by reference. So, the memory required for
 each item is a single memory address. On a 64-bit machine, an address
@@ -57,19 +49,19 @@ Python dictionaries (and classes) allow up to 5 values to be stored
 before their reserved memory doubles. Investigate by making a dictionary
 and adding a few more values to it:
 
-```python
+
 >>> row = { 'route': '22', 'date': '01/01/2001', 'daytype': 'U', 'rides': 7354 }
 >>> sys.getsizeof(row)
+184
 >>> sys.getsizeof(row)
-240
+184
 >>> row['a'] = 1
 >>> sys.getsizeof(row)
-240
+184
 >>> row['b'] = 2
 >>> sys.getsizeof(row)
-368
->>> 
-```
+272
+
 
 Does the memory go down if you delete the item you just added?
 
@@ -85,70 +77,45 @@ You can often save a lot of memory if you change your view of data.
 For example, what happens if you read all of the bus data into a
 columns using this function?
 
-```python
-# readrides.py
+# In theory, this function should save a lot of memory. Let's analyze it before trying it.
+#
+# First, the datafile contained 577563 rows of data where each row contained
+# four values. If each row is stored as a dictionary, then those dictionaries
+# are minimally 240 bytes in size.
+#
+# ```python
+# >>> nrows = 577563     # Number of rows in original file
+# >>> nrows * 240
+# 138615120
+# >>>
+# ```
+#
+# So, that's 138MB just for the dictionaries themselves. This does not
+# include any of the values actually stored in the dictionaries.
+#
+# By switching to columns, the data is stored in 4 separate lists.
+# Each list requires 8 bytes per item to store a pointer. So, here's
+# a rough estimate of the list requirements:
+#
+# ```python
+# >>> nrows * 4 * 8
+# 18482016
+# >>>
+# ```
+#
+# That's about 18MB in list overhead. So, switching to a column orientation
+# should save about 120MB of memory solely from eliminating all of the extra information that
+# needs to be stored in dictionaries.
+#
+# Try using this function to read the bus data and look at the memory use.
 
-...
-
-def read_rides_as_columns(filename):
-    '''
-    Read the bus ride data into 4 lists, representing columns
-    '''
-    routes = []
-    dates = []
-    daytypes = []
-    numrides = []
-    with open(filename) as f:
-        rows = csv.reader(f)
-        headings = next(rows)     # Skip headers
-        for row in rows:
-            routes.append(row[0])
-            dates.append(row[1])
-            daytypes.append(row[2])
-            numrides.append(int(row[3]))
-    return dict(routes=routes, dates=dates, daytypes=daytypes, numrides=numrides)
-```
-
-In theory, this function should save a lot of memory. Let's analyze it before trying it.
-
-First, the datafile contained 577563 rows of data where each row contained
-four values. If each row is stored as a dictionary, then those dictionaries
-are minimally 240 bytes in size.
-
-```python
->>> nrows = 577563     # Number of rows in original file
->>> nrows * 240
-138615120
->>>
-```
-
-So, that's 138MB just for the dictionaries themselves. This does not
-include any of the values actually stored in the dictionaries.
-
-By switching to columns, the data is stored in 4 separate lists.  
-Each list requires 8 bytes per item to store a pointer. So, here's
-a rough estimate of the list requirements:
-
-```python
->>> nrows * 4 * 8
-18482016
->>>
-```
-
-That's about 18MB in list overhead. So, switching to a column orientation
-should save about 120MB of memory solely from eliminating all of the extra information that
-needs to be stored in dictionaries.
-
-Try using this function to read the bus data and look at the memory use.
-
-```python
 >>> import tracemalloc
+>>> from readrides import read_rides_as_columns
 >>> tracemalloc.start()
 >>> columns = read_rides_as_columns('Data/ctabus.csv')
 >>> tracemalloc.get_traced_memory()
-... look at the result ...
->>>
-```
+(96169124, 96199565)
+
 
 Does the result reflect the expected savings in memory from our rough calculations above?
 
@@ -187,7 +154,7 @@ Try creating a `RideData` instance. You'll find that it fails with an
 error message like this:
 
 ```python
->>> records = RideData()
+# >>> records = RideData()
 Traceback (most recent call last):
 ...
 TypeError: Can't instantiate abstract class RideData with abstract methods __getitem__, __len__
@@ -211,7 +178,7 @@ class RideData(collections.abc.Sequence):
         self.dates = []
         self.daytypes = []
         self.numrides = []
-        
+
     def __len__(self):
         # All lists assumed to have the same length
         return len(self.routes)
@@ -237,34 +204,34 @@ changing only one line of code:
 # readrides.py
 ...
 
-def read_rides_as_dicts(filename):
-    '''
-    Read the bus ride data as a list of dicts
-    '''
-    records = RideData()      # <--- CHANGE THIS
-    with open(filename) as f:
-        rows = csv.reader(f)
-        headings = next(rows)     # Skip headers
-        for row in rows:
-            route = row[0]
-            date = row[1]
-            daytype = row[2]
-            rides = int(row[3])
-            record = {
-                'route': route, 
-                'date': date, 
-                'daytype': daytype, 
-                'rides' : rides
-                }
-            records.append(record)
-    return records
-```
+# def read_rides_as_dicts(filename):
+#     '''
+#     Read the bus ride data as a list of dicts
+#     '''
+#     records = RideData()      # <--- CHANGE THIS
+#     with open(filename) as f:
+#         rows = csv.reader(f)
+#         headings = next(rows)     # Skip headers
+#         for row in rows:
+#             route = row[0]
+#             date = row[1]
+#             daytype = row[2]
+#             rides = int(row[3])
+#             record = {
+#                 'route': route,
+#                 'date': date,
+#                 'daytype': daytype,
+#                 'rides' : rides
+#                 }
+#             records.append(record)
+#     return records
+# ```
 
 If you've done this right, old code should work exactly as it did before.
 For example:
 
-```python
->>> rows = readrides.read_rides_as_dicts('Data/ctabus.csv')
+>>> from readrides import read_rides_as_dicts
+>>> rows = read_rides_as_dicts('Data/ctabus.csv')
 >>> rows
 <readrides.RideData object at 0x10f5054a8>
 >>> len(rows)
@@ -275,8 +242,7 @@ For example:
 {'route': '4', 'date': '01/01/2001', 'daytype': 'U', 'rides': 9288}
 >>> rows[2]
 {'route': '6', 'date': '01/01/2001', 'daytype': 'U', 'rides': 6048}
->>> 
-```
+
 
 Run your earlier CTA code from [Exercise 2.2](ex2_2.md). It
 should work without modification, but use substantially less memory.
@@ -285,19 +251,15 @@ should work without modification, but use substantially less memory.
 
 What happens when you take a slice of ride data?
 
-```python
 >>> r = rows[0:10]
 >>> r
-... look at result ...
->>>
-```
+{'route': ['3', '4', '6', '8', '9', '10', '11', '12', '18', '20'], 'date': ['01/01/2001', '01/01/2001', '01/01/2001', '01/01/2001', '01/01/2001', '01/01/2001', '01/01/2001', '01/01/2001', '01/01/2001', '01/01/2001'], 'daytype': ['U', 'U', 'U', 'U', 'U', 'U', 'U', 'U', 'U', 'U'], 'rides': [7354, 9288, 6048, 6309, 11207, 385, 610, 3678, 375, 7096]}
 
 It's probably going to look a little crazy. Can you modify
 the `RideData` class so that it produces a proper slice that
 looks like a list of dictionaries? For example, like this:
 
-```python
->>> rows = readrides.read_rides_as_columns('Data/ctabus.csv')
+>>> rows = read_rides_as_columns('Data/ctabus.csv')
 >>> rows
 <readrides.RideData object at 0x10f5054a8>
 >>> len(rows)
@@ -312,14 +274,5 @@ looks like a list of dictionaries? For example, like this:
 >>> r[1]
 {'route': '4', 'date': '01/01/2001', 'daytype': 'U', 'rides': 9288}
 >>>
-```
 
-\[ [Solution](soln2_5.md) | [My Solution](../lists_and_dicts_mem_alloc.py) | [Index](index.md) | [Exercise 2.4](ex2_4.md) | [Exercise 2.6](ex2_6.md) \]
-
-----
-`>>>` Advanced Python Mastery  
-`...` A course by [dabeaz](https://www.dabeaz.com)  
-`...` Copyright 2007-2023
-
-![](https://i.creativecommons.org/l/by-sa/4.0/88x31.png). This work is licensed under
-a [Creative Commons Attribution-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-sa/4.0/)
+"""
