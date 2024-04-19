@@ -215,6 +215,100 @@ Traceback (most recent call last):
   File "<stdin>", line 1, in <module>
 TypeError: Can't instantiate abstract class NewFormatter with abstract methods headings
 
+>>> def print_table(records, fields, formats, formatter):
+...        formatter.headings(fields)
+...        for r in records:
+...            rowdata = [(fmt % getattr(r, fieldname))
+...	               for fieldname,fmt in zip(fields,formats)]
+...            formatter.row(rowdata)
+>>> import stock, reader
+>>> portfolio = reader.read_csv_as_instances('Data/portfolio.csv', stock.Stock)
+>>> from tableformat import TextTableFormatter
+>>> formatter = TextTableFormatter()
+>>> print_table(portfolio, ['name','shares','price'], ['%s','%d','%0.2f'], formatter)
+      name     shares      price
+---------- ---------- ----------
+        AA        100      32.20
+       IBM         50      91.10
+       CAT        150      83.44
+      MSFT        200      51.23
+        GE         95      40.37
+      MSFT         50      65.10
+       IBM        100      70.44
+
+>>> import stock, reader
+>>> portfolio = reader.read_csv_as_instances('Data/portfolio.csv', stock.Stock)
+>>> from tableformat import TextTableFormatter, ColumnFormatMixin, print_table
+>>> class PortfolioFormatter(ColumnFormatMixin, TextTableFormatter):
+...      formats = ['%s', '%d', '%0.2f']
+>>> formatter = PortfolioFormatter()
+>>> print_table(portfolio, ['name','shares','price'], formatter)
+      name     shares      price
+---------- ---------- ----------
+        AA        100      32.20
+       IBM         50      91.10
+       CAT        150      83.44
+      MSFT        200      51.23
+        GE         95      40.37
+      MSFT         50      65.10
+       IBM        100      70.44
+
+>>> import stock, reader
+>>> portfolio = reader.read_csv_as_instances('Data/portfolio.csv', stock.Stock)
+>>> from tableformat import TextTableFormatter, ColumnFormatMixin, print_table
+>>> class PortfolioFormatter(ColumnFormatMixin, TextTableFormatter):
+        formats = ['%s', '%d', '%0.2f']
+
+>>> formatter = PortfolioFormatter()
+>>> print_table(portfolio, ['name','shares','price'], formatter)
+      name     shares      price
+---------- ---------- ----------
+        AA        100      32.20
+       IBM         50      91.10
+       CAT        150      83.44
+      MSFT        200      51.23
+        GE         95      40.37
+      MSFT         50      65.10
+       IBM        100      70.44
+
+>>> from tableformat import TextTableFormatter, UpperHeadersMixin
+>>> class PortfolioFormatter(UpperHeadersMixin, TextTableFormatter):
+        pass
+
+>>> formatter = PortfolioFormatter()
+>>> print_table(portfolio, ['name','shares','price'], formatter)
+      NAME     SHARES      PRICE
+---------- ---------- ----------
+        AA        100       32.2
+       IBM         50       91.1
+       CAT        150      83.44
+      MSFT        200      51.23
+        GE         95      40.37
+      MSFT         50       65.1
+       IBM        100      70.44
+
+>>> from tableformat import create_formatter
+>>> formatter1 = create_formatter('csv', column_formats=['"%s"','%d','%0.2f'])
+>>> print_table(portfolio, ['name','shares','price'], formatter1)
+name,shares,price
+"AA",100,32.20
+"IBM",50,91.10
+"CAT",150,83.44
+"MSFT",200,51.23
+"GE",95,40.37
+"MSFT",50,65.10
+"IBM",100,70.44
+>>> formatter2 = create_formatter('text', upper_headers=True)
+>>> print_table(portfolio, ['name','shares','price'], formatter2)
+      NAME     SHARES      PRICE
+---------- ---------- ----------
+        AA        100       32.2
+       IBM         50       91.1
+       CAT        150      83.44
+      MSFT        200      51.23
+        GE         95      40.37
+      MSFT         50       65.1
+       IBM        100      70.44
 
 """
 
@@ -238,13 +332,26 @@ def print_table(records, fields, formatter):
     # print(('-' * 10 + ' ') * len(fields))
     # for record in records:
     #     print(' '.join('%10s' % getattr(record, fieldname) for fieldname in fields))
-        if not isinstance(formatter, TableFormatter):
-            raise TypeError('Expected a TableFormatter')
+    if not isinstance(formatter, TableFormatter):
+        raise TypeError('Expected a TableFormatter')
 
-        formatter.headings(fields)
-        for r in records:
-            rowdata = [getattr(r, fieldname) for fieldname in fields]
-            formatter.row(rowdata)
+    formatter.headings(fields)
+    for r in records:
+        rowdata = [getattr(r, fieldname) for fieldname in fields]
+        formatter.row(rowdata)
+
+
+class ColumnFormatMixin:
+    formats = []
+
+    def row(self, rowdata):
+        rowdata = [(fmt % d) for fmt, d in zip(self.formats, rowdata)]
+        super().row(rowdata)
+
+
+class UpperHeadersMixin:
+    def headings(self, headers):
+        super().headings([h.upper() for h in headers])
 
 
 class TableFormatter:
@@ -286,7 +393,7 @@ class HTMLTableFormatter(TableFormatter):
         print('</tr>')
 
 
-def create_formatter(name):
+def create_formatter(name, column_formats=None, upper_headers=False):
     if name == 'text':
         formatter_cls = TextTableFormatter
     elif name == 'csv':
@@ -295,6 +402,15 @@ def create_formatter(name):
         formatter_cls = HTMLTableFormatter
     else:
         raise RuntimeError('Unknown format %s' % name)
+
+    if column_formats:
+        class formatter_cls(ColumnFormatMixin, formatter_cls):
+              formats = column_formats
+
+    if upper_headers:
+        class formatter_cls(UpperHeadersMixin, formatter_cls):
+            pass
+
     return formatter_cls()
 
 
