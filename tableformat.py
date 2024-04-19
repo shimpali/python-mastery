@@ -112,7 +112,79 @@ Try it with the sell() method just to make sure you understand the mechanics:
 >>> import tableformat
 >>> portfolio = reader.read_csv_as_instances('Data/portfolio.csv', stock.Stock)
 >>> tableformat.print_table(portfolio, ['name','shares','price'])
+      name     shares      price
+---------- ---------- ----------
+        AA        100       32.2
+       IBM         50       91.1
+       CAT        150      83.44
+      MSFT        200      51.23
+        GE         95      40.37
+      MSFT         50       65.1
+       IBM        100      70.44
 
+>>> import stock, reader, tableformat
+>>> portfolio = reader.read_csv_as_instances('Data/portfolio.csv', stock.Stock)
+>>> formatter = tableformat.TableFormatter()
+>>> tableformat.print_table_class(portfolio, ['name', 'shares', 'price'], formatter)
+Traceback (most recent call last):
+...
+NotImplementedError
+
+>>> import stock, reader, tableformat
+>>> portfolio = reader.read_csv_as_instances('Data/portfolio.csv', stock.Stock)
+>>> formatter = tableformat.TextTableFormatter()
+>>> tableformat.print_table_class(portfolio, ['name','shares','price'], formatter)
+      name     shares      price
+---------- ---------- ----------
+        AA        100       32.2
+       IBM         50       91.1
+       CAT        150      83.44
+      MSFT        200      51.23
+        GE         95      40.37
+      MSFT         50       65.1
+       IBM        100      70.44
+
+
+>>> import tableformat portfolio = reader.read_csv_as_instances('Data/portfolio.csv', stock.Stock)
+>>> formatter = tableformat.CSVTableFormatter()
+>>> tableformat.print_table_class(portfolio, ['name','shares','price'], formatter)
+name,shares,price
+AA,100,32.2
+IBM,50,91.1
+CAT,150,83.44
+MSFT,200,51.23
+GE,95,40.37
+MSFT,50,65.1
+IBM,100,70.44
+
+>>> import stock, reader, tableformat
+>>> portfolio = reader.read_csv_as_instances('Data/portfolio.csv', stock.Stock)
+>>> formatter = tableformat.HTMLTableFormatter()
+>>> tableformat.print_table_class(portfolio, ['name','shares','price'], formatter)
+<tr> <th>name</th> <th>shares</th> <th>price</th> </tr>
+<tr> <td>AA</td> <td>100</td> <td>32.2</td> </tr>
+<tr> <td>IBM</td> <td>50</td> <td>91.1</td> </tr>
+<tr> <td>CAT</td> <td>150</td> <td>83.44</td> </tr>
+<tr> <td>MSFT</td> <td>200</td> <td>51.23</td> </tr>
+<tr> <td>GE</td> <td>95</td> <td>40.37</td> </tr>
+<tr> <td>MSFT</td> <td>50</td> <td>65.1</td> </tr>
+<tr> <td>IBM</td> <td>100</td> <td>70.44</td> </tr>
+
+>>> from tableformat import create_formatter, print_table_class
+>>> formatter = create_formatter('html')
+>>> print_table_class(portfolio, ['name','shares','price'], formatter)
+<tr> <th>name</th> <th>shares</th> <th>price</th> </tr>
+<tr> <td>AA</td> <td>100</td> <td>32.2</td> </tr>
+<tr> <td>IBM</td> <td>50</td> <td>91.1</td> </tr>
+<tr> <td>CAT</td> <td>150</td> <td>83.44</td> </tr>
+<tr> <td>MSFT</td> <td>200</td> <td>51.23</td> </tr>
+<tr> <td>GE</td> <td>95</td> <td>40.37</td> </tr>
+<tr> <td>MSFT</td> <td>50</td> <td>65.1</td> </tr>
+<tr> <td>IBM</td> <td>100</td> <td>70.44</td> </tr>
+
+The TableFormatter class in this exercise is an example of something known as an "Abstract Base Class."
+It's not something that's meant to be used directly. Instead, it's serving as a kind of interface specification for a program component--in this case the various output formats.
+Essentially, the code that produces the table will be programmed against the abstract base class with the expectation that a user will provide a suitable implementation.
 """
 
 
@@ -127,11 +199,69 @@ class Stock:
 
     def sell(self, nshares):
         self.shares -= nshares
-        
+
 
 # Print a table
 def print_table(records, fields):
     print(' '.join('%10s' % fieldname for fieldname in fields))
-    print(('-'*10 + ' ')*len(fields))
+    print(('-' * 10 + ' ') * len(fields))
     for record in records:
         print(' '.join('%10s' % getattr(record, fieldname) for fieldname in fields))
+
+
+class TableFormatter:
+    def headings(self, headers):
+        raise NotImplementedError()
+
+    def row(self, rowdata):
+        raise NotImplementedError()
+
+
+class TextTableFormatter(TableFormatter):
+    def headings(self, headers):
+        print(' '.join('%10s' % h for h in headers))
+        print(('-' * 10 + ' ') * len(headers))
+
+    def row(self, rowdata):
+        print(' '.join('%10s' % d for d in rowdata))
+
+
+class CSVTableFormatter(TableFormatter):
+    def headings(self, headers):
+        print(','.join(headers))
+
+    def row(self, rowdata):
+        print(','.join(str(d) for d in rowdata))
+
+
+class HTMLTableFormatter(TableFormatter):
+    def headings(self, headers):
+        print('<tr>', end=' ')
+        for h in headers:
+            print('<th>%s</th>' % h, end=' ')
+        print('</tr>')
+
+    def row(self, rowdata):
+        print('<tr>', end=' ')
+        for d in rowdata:
+            print('<td>%s</td>' % d, end=' ')
+        print('</tr>')
+
+
+def create_formatter(name):
+    if name == 'text':
+        formatter_cls = TextTableFormatter
+    elif name == 'csv':
+        formatter_cls = CSVTableFormatter
+    elif name == 'html':
+        formatter_cls = HTMLTableFormatter
+    else:
+        raise RuntimeError('Unknown format %s' % name)
+    return formatter_cls()
+
+
+def print_table_class(records, fields, formatter):
+    formatter.headings(fields)
+    for r in records:
+        rowdata = [getattr(r, fieldname) for fieldname in fields]
+        formatter.row(rowdata)
