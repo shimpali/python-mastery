@@ -335,4 +335,8 @@ To delete a value, use `del`
 >>> prices
 {'IBM': 123.45, 'GOOG': 490.1, 'HPQ': 26.15}
 
+>>> from datetime import datetime
+>>> current_date = datetime.now()
+>>> print(current_date.isoformat())
+
 """
