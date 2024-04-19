@@ -107,6 +107,12 @@ Try it with the sell() method just to make sure you understand the mechanics:
 >>> s.shares
 50
 
+>>> import stock
+>>> import reader
+>>> import tableformat
+>>> portfolio = reader.read_csv_as_instances('Data/portfolio.csv', stock.Stock)
+>>> tableformat.print_table(portfolio, ['name','shares','price'])
+
 """
 
 

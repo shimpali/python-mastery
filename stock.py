@@ -70,11 +70,56 @@ Decimal('32.20')
 >>> s.cost()
 Decimal('3220.00')
 
+>>> s = Stock('GOOG', 100, 490.1)
+>>> s.cost_prop    # Property. Computes the cost
+49010.0
+
+(c) Enforcing Validation Rules
+>>> stc = StockTypeCheck('GOOG', 100, 490.10)
+>>> stc.shares = 50          # OK
+>>> stc.shares = '50'
+Traceback (most recent call last):
+...
+TypeError: Expected integer
+>>> stc.shares = -10
+Traceback (most recent call last):
+...
+ValueError: shares must be >= 0
+
+>>> stc.price = 123.45       # OK
+>>> stc.price = '123.45'
+Traceback (most recent call last):
+...
+TypeError: Expected float
+>>> stc.price = -10.0
+Traceback (most recent call last):
+...
+ValueError: price must be >= 0
+
+(d) Adding __slots__
+
+>>> s3 = Stock('GOOG', 100, 490.10)
+>>> s3.spam = 42
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+AttributeError: 'Stock' object has no attribute 'spam'
+
+(e) Reconciling Types
+>>> from decimal import Decimal
+>>> class DStock(Stock):
+...     _types = (str, int, Decimal)
+>>> sd = DStock('AA', 50, Decimal('91.1'))
+>>> sd.price = 92.3
+Traceback (most recent call last):
+...
+TypeError: Expected a Decimal
+
 """
 
 
 class Stock:
-    types = (str, int, float)
+    __slots__ = ('name', 'shares', 'price')
+    _types = (str, int, float)
 
     def __init__(self, name, shares, price):
         self.name = name
@@ -82,6 +127,10 @@ class Stock:
         self.price = price
 
     def cost(self):
+        return self.shares * self.price
+
+    @property
+    def cost_prop(self):
         return self.shares * self.price
 
     def sell(self, nshares):
@@ -116,6 +165,51 @@ def print_portfolio(portfolio2):
     print(('-' * 10 + ' ') * 3)
     for s in portfolio2:
         print('%10s %10d %10.2f' % (s.name, s.shares, s.price))
+
+
+class StockTypeCheck:
+    _types = (str, int, float)
+
+    def __init__(self, name, shares, price):
+        self.name = name
+        self.shares = shares
+        self.price = price
+
+    @classmethod
+    def from_row(cls, row):
+        values = [func(val) for func, val in zip(cls._types, row)]
+        return cls(*values)
+
+    @property
+    def shares(self):
+        return self._shares
+
+    @shares.setter
+    def shares(self, value):
+        if not isinstance(value, int):
+            raise TypeError('Expected an integer')
+        if value < 0:
+            raise ValueError('shares must be >= 0')
+        self._shares = value
+
+    @property
+    def price(self):
+        return self._price
+
+    @price.setter
+    def price(self, value):
+        if not isinstance(value, float):
+            raise TypeError('Expected a float')
+        if value < 0:
+            raise ValueError('price must be >= 0')
+        self._price = value
+
+    @property
+    def cost(self):
+        return self.shares * self.price
+
+    def sell(self, nshares):
+        self.shares -= nshares
 
 
 if __name__ == '__main__':
