@@ -114,7 +114,50 @@ Traceback (most recent call last):
 ...
 TypeError: Expected a Decimal
 
+>>> goog = Stock('GOOG', 100, 490.10)
+>>> goog
+Stock('GOOG', 100, 490.1)
+
+>>> import stock, reader
+>>> portfolio_1 = reader.read_csv_as_instances('Data/portfolio.csv', stock.Stock)
+>>> portfolio_1
+[Stock('AA', 100, 32.2), Stock('IBM', 50, 91.1), Stock('CAT', 150, 83.44), Stock('MSFT', 200, 51.23), Stock('GE', 95, 40.37), Stock('MSFT', 50, 65.1), Stock('IBM', 100, 70.44)]
+
+>>> a = Stock('GOOG', 100, 490.1)
+>>> b = Stock('GOOG', 100, 490.1)
+>>> a == b
+True
+
+This context manager works by making a temporary patch to sys.stdout to cause all output to redirect to a different file. On exit, the patch is reverted.
+>>> import sys
+>>> class redirect_stdout:
+...        def __init__(self, out_file):
+...            self.out_file = out_file
+...        def __enter__(self):
+...            self.stdout = sys.stdout
+...            sys.stdout = self.out_file
+...            return self.out_file
+...        def __exit__(self, ty, val, tb):
+...            sys.stdout = self.stdout
+
+>>> from tableformat import create_formatter, print_table_class
+>>> formatter = create_formatter('text')
+>>> with redirect_stdout(open('out.txt', 'w')) as file:
+...        print_table_class(portfolio, ['name','shares','price'], formatter)
+...        file.close()
+>>> # Inspect the file
+>>> print(open('out.txt').read())
+      name     shares      price
+---------- ---------- ----------
+        AA        100       32.2
+       IBM         50       91.1
+       CAT        150      83.44
+      MSFT        200      51.23
+        GE         95      40.37
+      MSFT         50       65.1
+       IBM        100      70.44
 """
+import tableformat
 
 
 class Stock:
@@ -140,6 +183,14 @@ class Stock:
     def from_row(cls, row):
         values = [func(val) for func, val in zip(cls._types, row)]
         return cls(*values)
+
+    def __repr__(self):
+        # Note: The !r format code produces the repr() string
+        return f'{type(self).__name__}({self.name!r}, {self.shares!r}, {self.price!r})'
+
+    def __eq__(self, other):
+        return isinstance(other, Stock) and ((self.name, self.shares, self.price) ==
+                                             (other.name, other.shares, other.price))
 
 
 def read_portfolio(filename):
