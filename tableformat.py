@@ -183,8 +183,39 @@ IBM,100,70.44
 <tr> <td>IBM</td> <td>100</td> <td>70.44</td> </tr>
 
 The TableFormatter class in this exercise is an example of something known as an "Abstract Base Class."
-It's not something that's meant to be used directly. Instead, it's serving as a kind of interface specification for a program component--in this case the various output formats.
-Essentially, the code that produces the table will be programmed against the abstract base class with the expectation that a user will provide a suitable implementation.
+It's not something that's meant to be used directly. Instead, it's serving as a kind of interface specification for a
+program component--in this case the various output formats.
+Essentially, the code that produces the table will be programmed
+against the abstract base class with the expectation that a user will provide a suitable implementation.
+
+(a) Interfaces and type checking
+
+>>> import stock, reader, tableformat
+>>> portfolio = reader.read_csv_as_instances('Data/portfolio.csv', stock.Stock)
+>>> class MyFormatter:
+...      def headings(self, headers): pass
+...      def row(self, rowdata): pass
+
+>>> tableformat.print_table(portfolio, ['name','shares','price'], MyFormatter())
+Traceback (most recent call last):
+...
+TypeError: Expected a TableFormatter
+
+(b) Abstract Base Classes
+
+Modify the TableFormatter base class so that it is defined as a proper abstract base class using the abc module.
+Once you have done that, try this experiment:
+>>> class NewFormatter(TableFormatter):
+...     def headers(self, headings):
+...         pass
+...     def row(self, rowdata):
+...         pass
+>>> f = NewFormatter()
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+TypeError: Can't instantiate abstract class NewFormatter with abstract methods headings
+
+
 """
 
 
@@ -202,11 +233,18 @@ class Stock:
 
 
 # Print a table
-def print_table(records, fields):
-    print(' '.join('%10s' % fieldname for fieldname in fields))
-    print(('-' * 10 + ' ') * len(fields))
-    for record in records:
-        print(' '.join('%10s' % getattr(record, fieldname) for fieldname in fields))
+def print_table(records, fields, formatter):
+    # print(' '.join('%10s' % fieldname for fieldname in fields))
+    # print(('-' * 10 + ' ') * len(fields))
+    # for record in records:
+    #     print(' '.join('%10s' % getattr(record, fieldname) for fieldname in fields))
+        if not isinstance(formatter, TableFormatter):
+            raise TypeError('Expected a TableFormatter')
+
+        formatter.headings(fields)
+        for r in records:
+            rowdata = [getattr(r, fieldname) for fieldname in fields]
+            formatter.row(rowdata)
 
 
 class TableFormatter:
