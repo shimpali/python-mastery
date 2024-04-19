@@ -16,6 +16,26 @@
 577563
 >>> rows[0]
 {'route': '3', 'date': '01/01/2001', 'daytype': 'U', 'rides': 7354}
+
+>>> from reader import read_csv_as_instances
+>>> from stock import Stock
+>>> portfolio = read_csv_as_instances('Data/portfolio.csv', Stock)
+>>> portfolio
+[<stock.Stock object at 0x11a5e2750>, <stock.Stock object at 0x11a5e27d0>, <stock.Stock object at 0x11a5e28d0>, <stock.Stock object at 0x11a5e2850>, <stock.Stock object at 0x11a5e2990>, <stock.Stock object at 0x11a5e2a50>, <stock.Stock object at 0x11a5e2ad0>]
+
+>>> class Row:
+...         def __init__(self, route, date, daytype, numrides):
+...             self.route = route
+...             self.date = date
+...             self.daytype = daytype
+...             self.numrides = numrides
+...
+...         @classmethod
+...         def from_row(cls, row):
+...             return cls(row[0], row[1], row[2], int(row[3]))
+>>> rides = read_csv_as_instances('Data/ctabus.csv', Row)
+>>> len(rides)
+577563
 """
 import csv
 
@@ -31,4 +51,17 @@ def read_csv_as_dicts(filename, types):
         for row in rows:
             record = {name: func(val) for name, func, val in zip(headers, types, row)}
             records.append(record)
+    return records
+
+
+def read_csv_as_instances(filename, cls):
+    """
+    Read a CSV file into a list of instances
+    """
+    records = []
+    with open(filename) as f:
+        rows = csv.reader(f)
+        headers = next(rows)
+        for row in rows:
+            records.append(cls.from_row(row))
     return records
