@@ -49,6 +49,9 @@
 
 import csv
 from abc import ABC, abstractmethod
+import logging
+
+log = logging.getLogger(__name__)
 
 
 def read_csv_as_dicts(filename, types):
@@ -159,13 +162,17 @@ def read_csv_as_instances(filename, cls, *, headers=None):
 
 
 def convert_csv(lines, converter, *, headers=None):
-    records = []
     rows = csv.reader(lines)
     if headers is None:
         headers = next(rows)
-    for row in rows:
-        record = converter(headers, row)
-        records.append(record)
+
+    records = []
+    for rowno, row in enumerate(rows, start=1):
+        try:
+            records.append(converter(headers, row))
+        except ValueError as e:
+            log.warning('Row %s: Bad row: %s', rowno, row)
+            log.debug('Row %s: Reason: %s', rowno, row)
     return records
 
 
