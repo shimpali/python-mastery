@@ -1,4 +1,4 @@
-# stock.py
+# orig_stock.py
 
 class Stock:
     def __init__(self, name, shares, price):

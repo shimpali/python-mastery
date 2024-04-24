@@ -18,7 +18,7 @@
 {'route': '3', 'date': '01/01/2001', 'daytype': 'U', 'rides': 7354}
 
 >>> from reader import read_csv_as_instances
->>> from stock import Stock
+>>> from orig_stock import Stock
 >>> portfolio = read_csv_as_instances('Data/portfolio.csv', Stock)
 >>> portfolio
 [<stock.Stock object at 0x11a5e2750>, <stock.Stock object at 0x11a5e27d0>, <stock.Stock object at 0x11a5e28d0>, <stock.Stock object at 0x11a5e2850>, <stock.Stock object at 0x11a5e2990>, <stock.Stock object at 0x11a5e2a50>, <stock.Stock object at 0x11a5e2ad0>]
@@ -42,8 +42,8 @@
 >>> port = parser.parse('Data/portfolio.csv')
 
 >>> import reader
->>> import stock
->>> port = reader.read_csv_as_instances('Data/portfolio.csv', stock.Stock)
+>>> import orig_stock
+>>> port = reader.read_csv_as_instances('Data/portfolio.csv', orig_stock.Stock)
 
 """
 

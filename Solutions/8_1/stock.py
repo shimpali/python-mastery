@@ -1,4 +1,4 @@
-# stock.py
+# orig_stock.py
 
 from structure import Structure
 from validate import String, PositiveInteger, PositiveFloat

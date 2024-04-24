@@ -46,9 +46,9 @@ technique in part (b).
 Create a new module called tableformat.py. In that program, write a function print_table() that takes a sequence
 (list) of objects, a list of attribute names, and prints a nicely formatted table. For example:
 
->>> import stock
+>>> import orig_stock
 >>> import tableformat
->>> portfolio = stock.read_portfolio('Data/portfolio.csv')
+>>> portfolio = orig_stock.read_portfolio('Data/portfolio.csv')
 >>> tableformat.print_table(portfolio, ['name', 'shares', 'price'])
       name     shares      price
 ---------- ---------- ----------
@@ -107,10 +107,10 @@ Try it with the sell() method just to make sure you understand the mechanics:
 >>> s.shares
 50
 
->>> import stock
+>>> import orig_stock
 >>> import reader
 >>> import tableformat
->>> portfolio = reader.read_csv_as_instances('Data/portfolio.csv', stock.Stock)
+>>> portfolio = reader.read_csv_as_instances('Data/portfolio.csv', orig_stock.Stock)
 >>> tableformat.print_table(portfolio, ['name','shares','price'])
       name     shares      price
 ---------- ---------- ----------
@@ -122,16 +122,16 @@ Try it with the sell() method just to make sure you understand the mechanics:
       MSFT         50       65.1
        IBM        100      70.44
 
->>> import stock, reader, tableformat
->>> portfolio = reader.read_csv_as_instances('Data/portfolio.csv', stock.Stock)
+>>> import orig_stock, reader, tableformat
+>>> portfolio = reader.read_csv_as_instances('Data/portfolio.csv', orig_stock.Stock)
 >>> formatter = tableformat.TableFormatter()
 >>> tableformat.print_table_class(portfolio, ['name', 'shares', 'price'], formatter)
 Traceback (most recent call last):
 ...
 NotImplementedError
 
->>> import stock, reader, tableformat
->>> portfolio = reader.read_csv_as_instances('Data/portfolio.csv', stock.Stock)
+>>> import orig_stock, reader, tableformat
+>>> portfolio = reader.read_csv_as_instances('Data/portfolio.csv', orig_stock.Stock)
 >>> formatter = tableformat.TextTableFormatter()
 >>> tableformat.print_table_class(portfolio, ['name','shares','price'], formatter)
       name     shares      price
@@ -145,7 +145,7 @@ NotImplementedError
        IBM        100      70.44
 
 
->>> import tableformat portfolio = reader.read_csv_as_instances('Data/portfolio.csv', stock.Stock)
+>>> import tableformat portfolio = reader.read_csv_as_instances('Data/portfolio.csv', orig_stock.Stock)
 >>> formatter = tableformat.CSVTableFormatter()
 >>> tableformat.print_table_class(portfolio, ['name','shares','price'], formatter)
 name,shares,price
@@ -157,8 +157,8 @@ GE,95,40.37
 MSFT,50,65.1
 IBM,100,70.44
 
->>> import stock, reader, tableformat
->>> portfolio = reader.read_csv_as_instances('Data/portfolio.csv', stock.Stock)
+>>> import orig_stock, reader, tableformat
+>>> portfolio = reader.read_csv_as_instances('Data/portfolio.csv', orig_stock.Stock)
 >>> formatter = tableformat.HTMLTableFormatter()
 >>> tableformat.print_table_class(portfolio, ['name','shares','price'], formatter)
 <tr> <th>name</th> <th>shares</th> <th>price</th> </tr>
@@ -190,8 +190,8 @@ against the abstract base class with the expectation that a user will provide a 
 
 (a) Interfaces and type checking
 
->>> import stock, reader, tableformat
->>> portfolio = reader.read_csv_as_instances('Data/portfolio.csv', stock.Stock)
+>>> import orig_stock, reader, tableformat
+>>> portfolio = reader.read_csv_as_instances('Data/portfolio.csv', orig_stock.Stock)
 >>> class MyFormatter:
 ...      def headings(self, headers): pass
 ...      def row(self, rowdata): pass
@@ -221,8 +221,8 @@ TypeError: Can't instantiate abstract class NewFormatter with abstract methods h
 ...            rowdata = [(fmt % getattr(r, fieldname))
 ...	               for fieldname,fmt in zip(fields,formats)]
 ...            formatter.row(rowdata)
->>> import stock, reader
->>> portfolio = reader.read_csv_as_instances('Data/portfolio.csv', stock.Stock)
+>>> import orig_stock, reader
+>>> portfolio = reader.read_csv_as_instances('Data/portfolio.csv', orig_stock.Stock)
 >>> from tableformat import TextTableFormatter
 >>> formatter = TextTableFormatter()
 >>> print_table(portfolio, ['name','shares','price'], ['%s','%d','%0.2f'], formatter)
@@ -236,8 +236,8 @@ TypeError: Can't instantiate abstract class NewFormatter with abstract methods h
       MSFT         50      65.10
        IBM        100      70.44
 
->>> import stock, reader
->>> portfolio = reader.read_csv_as_instances('Data/portfolio.csv', stock.Stock)
+>>> import orig_stock, reader
+>>> portfolio = reader.read_csv_as_instances('Data/portfolio.csv', orig_stock.Stock)
 >>> from tableformat import TextTableFormatter, ColumnFormatMixin, print_table
 >>> class PortfolioFormatter(ColumnFormatMixin, TextTableFormatter):
 ...      formats = ['%s', '%d', '%0.2f']
@@ -253,8 +253,8 @@ TypeError: Can't instantiate abstract class NewFormatter with abstract methods h
       MSFT         50      65.10
        IBM        100      70.44
 
->>> import stock, reader
->>> portfolio = reader.read_csv_as_instances('Data/portfolio.csv', stock.Stock)
+>>> import orig_stock, reader
+>>> portfolio = reader.read_csv_as_instances('Data/portfolio.csv', orig_stock.Stock)
 >>> from tableformat import TextTableFormatter, ColumnFormatMixin, print_table
 >>> class PortfolioFormatter(ColumnFormatMixin, TextTableFormatter):
         formats = ['%s', '%d', '%0.2f']

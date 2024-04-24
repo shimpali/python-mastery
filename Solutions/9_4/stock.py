@@ -1,4 +1,4 @@
-# stock.py
+# orig_stock.py
 
 from structly import *
 

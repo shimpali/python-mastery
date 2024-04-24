@@ -30,7 +30,7 @@ class Structure:
 Here is the `Stock` class in progress after this change:
 
 ```python
-# stock.py
+# orig_stock.py
 
 from structure import Structure
 

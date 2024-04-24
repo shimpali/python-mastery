@@ -118,7 +118,7 @@ TypeError: Expected a Decimal
 >>> goog
 Stock('GOOG', 100, 490.1)
 
->>> import stock, reader
+>>> import orig_stock, reader
 >>> portfolio_1 = reader.read_csv_as_instances('Data/portfolio.csv', stock.Stock)
 >>> portfolio_1
 [Stock('AA', 100, 32.2), Stock('IBM', 50, 91.1), Stock('CAT', 150, 83.44), Stock('MSFT', 200, 51.23), Stock('GE', 95, 40.37), Stock('MSFT', 50, 65.1), Stock('IBM', 100, 70.44)]

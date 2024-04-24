@@ -47,7 +47,7 @@ Define the following class which makes a read-only layer around an existing obje
 ...            return getattr(self._obj, name)
 
 To use the class, you simply wrap it around an existing instance:
->>> from stock import Stock
+>>> from orig_stock import Stock
 >>> s = Stock('GOOG', 100, 490.1)
 >>> p = Readonly(s)
 >>> p.name

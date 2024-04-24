@@ -1,7 +1,7 @@
 # Exercise 3.3 - Solution
 
 ```python
-# stock.py
+# orig_stock.py
 
 class Stock:
     types = (str, int, float)

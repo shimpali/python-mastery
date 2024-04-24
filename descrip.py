@@ -33,7 +33,7 @@ Try these steps which illustrate how descriptors get and set values on an instan
 >>> q.__set__(s, '75')
 Traceback (most recent call last):
   File "<stdin>", line 1, in <module>
-  File "stock.py", line 23, in shares
+  File "orig_stock.py", line 23, in shares
     raise TypeError('Expected an integer')
 TypeError: Expected an integer
 

@@ -1,4 +1,4 @@
-# stock.py
+# orig_stock.py
 
 class Stock:
     types = (str, int, float)

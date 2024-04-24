@@ -1,4 +1,4 @@
-import stock
+import orig_stock
 import unittest
 
 # (b) Unit testing
@@ -20,7 +20,7 @@ class TestStock(unittest.TestCase):
         self.assertEqual(s.cost, 49010.0)
 
     def test_sell(self):
-        s = stock.Stock('GOOG', 100, 490.1)
+        s = orig_stock.Stock('GOOG', 100, 490.1)
         s.sell(25)
         self.assertEqual(s.shares, 75)
 
@@ -31,7 +31,7 @@ class TestStock(unittest.TestCase):
         self.assertEqual(s.price, 490.1)
 
     def test_repr(self):
-        s = stock.Stock('GOOG', 100, 490.1)
+        s = orig_stock.Stock('GOOG', 100, 490.1)
         self.assertEqual(repr(s), "Stock('GOOG', 100, 490.1)")
 
     def test_eq(self):
@@ -100,7 +100,7 @@ class TestStock(unittest.TestCase):
             s.price = -45.23
 
     def test_bad_attribute(self):
-        s = stock.Stock('GOOG', 100, 490.1)
+        s = orig_stock.Stock('GOOG', 100, 490.1)
         with self.assertRaises(AttributeError):
             s.share = 100
 

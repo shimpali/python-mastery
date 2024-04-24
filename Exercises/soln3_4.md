@@ -3,7 +3,7 @@
 ## (a) Private attributes
 
 ```python
-# stock.py
+# orig_stock.py
 
 class Stock:
     _types = (str, int, float)
@@ -27,7 +27,7 @@ class Stock:
 ## (b) Computed Attributes
 
 ```python
-# stock.py
+# orig_stock.py
 
 class Stock:
     _types = (str, int, float)
@@ -52,7 +52,7 @@ class Stock:
 ## (c) Enforcing Type-Checking Rules
 
 ```python
-# stock.py
+# orig_stock.py
 
 class Stock:
     _types = (str, int, float)
@@ -99,7 +99,7 @@ class Stock:
 ## (d) Adding `__slots__`
 
 ```python
-# stock.py
+# orig_stock.py
 
 class Stock:
     __slots__ = ('name','_shares','_price')
@@ -148,7 +148,7 @@ class Stock:
 ## (e) Reconciling types
 
 ```python
-# stock.py
+# orig_stock.py
 
 class Stock:
     __slots__ = ('name','_shares','_price')

@@ -1,4 +1,4 @@
-# stock.py
+# orig_stock.py
 
 class Stock:
     __slots__ = ('name','_shares','_price')

@@ -3,7 +3,7 @@
 ## (a) Better output for printing objects
 
 ```python
-# stock.py
+# orig_stock.py
 
 class Stock:
     ...
